@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphic Design & Digital Media Practice Test</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --correct: #2ecc71;
+            --incorrect: #e74c3c;
+            --medium-score: #f39c12;
+            --high-score: #2ecc71;
+            --low-score: #c0392b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .quiz-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .question-count {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--secondary);
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        .question {
+            font-size: 20px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .answer {
+            background-color: rgba(236, 240, 241, 0.8);
+            border: 2px solid rgba(44, 62, 80, 0.1);
+            border-radius: 8px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .answer:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        .answer.correct {
+            background-color: rgba(46, 204, 113, 0.2);
+            border-color: var(--correct);
+        }
+        
+        .answer.incorrect {
+            background-color: rgba(231, 76, 60, 0.2);
+            border-color: var(--incorrect);
+        }
+        
+        .feedback {
+            margin-left: 10px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .feedback.correct {
+            color: var(--correct);
+            display: inline;
+        }
+        
+        .feedback.incorrect {
+            color: var(--incorrect);
+            display: inline;
+        }
+        
+        .results {
+            text-align: center;
+            display: none;
+        }
+        
+        .results h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .score {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+        
+        .high-score {
+            color: var(--high-score);
+        }
+        
+        .medium-score {
+            color: var(--medium-score);
+        }
+        
+        .low-score {
+            color: var(--low-score);
+        }
+        
+        .restart-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .question {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Graphic Design & Digital Media Practice Test</h1>
+            <p>Test your knowledge with 50 multiple-choice questions</p>
+        </header>
+        
+        <div class="quiz-container">
+            <div id="quiz-content">
+                <div class="progress">
+                    <div class="question-count">1/50</div>
+                </div>
+                
+                <div class="question" id="question">
+                    <!-- Question text will be inserted here -->
+                </div>
+                
+                <div class="answers" id="answers">
+                    <!-- Answer choices will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="results" id="results">
+                <h2>Your Results</h2>
+                <div class="score" id="score">0/50</div>
+                <p id="score-message">Thanks for completing the practice test!</p>
+                <button class="restart-btn" id="restart-btn">Try Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const quizQuestions = [
+            {
+                question: "What color model is primarily used for digital displays?",
+                answers: [
+                    "CMYK",
+                    "RGB",
+                    "HSB",
+                    "Pantone"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which file format is best for web graphics that require transparency?",
+                answers: [
+                    "JPEG",
+                    "BMP",
+                    "PNG",
+                    "TIFF"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the term for the space between characters in typography?",
+                answers: [
+                    "Leading",
+                    "Tracking",
+                    "Kerning",
+                    "Baseline"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which principle of design refers to the arrangement of elements to create a sense of stability?",
+                answers: [
+                    "Rhythm",
+                    "Balance",
+                    "Contrast",
+                    "Proximity"
+                ],
+                correct: 1
+            },
+            {
+                question: "What does DPI stand for in digital imaging?",
+                answers: [
+                    "Digital Pixel Integration",
+                    "Dots Per Inch",
+                    "Digital Print Intensity",
+                    "Document Property Index"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which software is primarily used for vector graphics?",
+                answers: [
+                    "Adobe Photoshop",
+                    "Adobe Illustrator",
+                    "Adobe Lightroom",
+                    "CorelDRAW"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a common aspect ratio for widescreen videos?",
+                answers: [
+                    "4:3",
+                    "16:9",
+                    "1:1",
+                    "3:2"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which color combination creates the highest contrast?",
+                answers: [
+                    "Blue and Green",
+                    "Red and Orange",
+                    "Yellow and White",
+                    "Black and White"
+                ],
+                correct: 3
+            },
+            {
+                question: "What does UI stand for in design?",
+                answers: [
+                    "User Interface",
+                    "Unified Integration",
+                    "User Interaction",
+                    "Universal Information"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which file format is best for preserving layers in image editing?",
+                answers: [
+                    "JPEG",
+                    "PNG",
+                    "PSD",
+                    "GIF"
+                ],
+                correct: 2
+            },
+            {
+                question: "What design principle involves repeating elements to create a sense of organized movement?",
+                answers: [
+                    "Emphasis",
+                    "Rhythm",
+                    "Unity",
+                    "Proportion"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which type of font does NOT have serifs?",
+                answers: [
+                    "Roman",
+                    "Slab serif",
+                    "Sans-serif",
+                    "Didone"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the name for a mockup of a website's structure without detailed design elements?",
+                answers: [
+                    "Prototype",
+                    "Wireframe",
+                    "Storyboard",
+                    "Sitemap"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which color mode should be used for documents intended for print?",
+                answers: [
+                    "RGB",
+                    "CMYK",
+                    "HSB",
+                    "Lab"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the term for the space between lines of text?",
+                answers: [
+                    "Kerning",
+                    "Tracking",
+                    "Leading",
+                    "Baseline"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which file format is best for animations on the web?",
+                answers: [
+                    "SVG",
+                    "JPEG",
+                    "GIF",
+                    "TIFF"
+                ],
+                correct: 2
+            },
+            {
+                question: "What does UX stand for in design?",
+                answers: [
+                    "User Experience",
+                    "User Extension",
+                    "Unified Exchange",
+                    "Ultra Exposure"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which design software is primarily used for page layout and desktop publishing?",
+                answers: [
+                    "Adobe Photoshop",
+                    "Adobe InDesign",
+                    "Adobe Illustrator",
+                    "Adobe Dreamweaver"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the standard resolution for web images?",
+                answers: [
+                    "300 DPI",
+                    "150 DPI",
+                    "72 DPI",
+                    "600 DPI"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which color represents passion and energy in color psychology?",
+                answers: [
+                    "Blue",
+                    "Green",
+                    "Red",
+                    "Yellow"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is a vector graphic?",
+                answers: [
+                    "An image made of pixels",
+                    "An image made of mathematical paths",
+                    "A 3D rendering",
+                    "A digital photograph"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which principle of design refers to the arrangement of elements to create a focal point?",
+                answers: [
+                    "Balance",
+                    "Rhythm",
+                    "Emphasis",
+                    "Unity"
+                ],
+                correct: 2
+            },
+            {
+                question: "What does SVG stand for?",
+                answers: [
+                    "Simple Vector Graphic",
+                    "Scalable Vector Graphics",
+                    "Standard Visual Gradient",
+                    "System Vector Generation"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which compression type results in some loss of image quality?",
+                answers: [
+                    "Lossless",
+                    "Lossy",
+                    "Vector",
+                    "Raw"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the term for the style guide that defines the visual elements of a brand?",
+                answers: [
+                    "Brand Strategy",
+                    "Marketing Plan",
+                    "Brand Identity",
+                    "Corporate Guidelines"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of these is NOT a primary color in the RGB model?",
+                answers: [
+                    "Red",
+                    "Green",
+                    "Blue",
+                    "Yellow"
+                ],
+                correct: 3
+            },
+            {
+                question: "What is the blending mode that completely hides the underlying layer?",
+                answers: [
+                    "Multiply",
+                    "Screen",
+                    "Normal",
+                    "Overlay"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which design principle deals with the visual flow of elements?",
+                answers: [
+                    "Hierarchy",
+                    "Contrast",
+                    "Unity",
+                    "Balance"
+                ],
+                correct: 0
+            },
+            {
+                question: "What does CSS stand for in web design?",
+                answers: [
+                    "Creative Style Sheets",
+                    "Computer Style Sheets",
+                    "Cascading Style Sheets",
+                    "Custom Style Systems"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which tool in Adobe Photoshop is used to remove unwanted elements?",
+                answers: [
+                    "Clone Stamp",
+                    "Healing Brush",
+                    "Eraser",
+                    "Magic Wand"
+                ],
+                correct: 0
+            },
+            {
+                question: "What is the term for a placeholder image or text in design?",
+                answers: [
+                    "Mockup",
+                    "Lorem Ipsum",
+                    "Wireframe",
+                    "Prototype"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which design approach emphasizes adapting layouts to different screen sizes?",
+                answers: [
+                    "Static Design",
+                    "Fixed Layout",
+                    "Responsive Design",
+                    "Fluid Design"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the process of adjusting spacing between specific letter pairs called?",
+                answers: [
+                    "Tracking",
+                    "Kerning",
+                    "Leading",
+                    "Justifying"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which color mode uses K to represent black?",
+                answers: [
+                    "RGB",
+                    "CMYK",
+                    "HSB",
+                    "Lab"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is a grid system used for in design?",
+                answers: [
+                    "Creating 3D effects",
+                    "Organizing layout elements",
+                    "Color management",
+                    "Photo editing"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which design principle creates a sense of visual connection between elements?",
+                answers: [
+                    "Contrast",
+                    "Repetition",
+                    "Alignment",
+                    "Proximity"
+                ],
+                correct: 3
+            },
+            {
+                question: "What does the pen tool in design software primarily create?",
+                answers: [
+                    "Brushstrokes",
+                    "Text",
+                    "Vector paths",
+                    "Pixel selections"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which of these is NOT a component of the Golden Ratio?",
+                answers: [
+                    "1.618",
+                    "Fibonacci sequence",
+                    "Divine proportion",
+                    "Rule of thirds"
+                ],
+                correct: 3
+            },
+            {
+                question: "What does PDF stand for?",
+                answers: [
+                    "Portable Document Format",
+                    "Print Design Format",
+                    "Published Digital File",
+                    "Professional Design Framework"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which color scheme uses colors that are opposite each other on the color wheel?",
+                answers: [
+                    "Analogous",
+                    "Monochromatic",
+                    "Complementary",
+                    "Triadic"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the term for the imaginary line upon which text appears to rest?",
+                answers: [
+                    "Guideline",
+                    "Baseline",
+                    "Median",
+                    "X-height"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which file format is best for photographs with many colors?",
+                answers: [
+                    "GIF",
+                    "PNG",
+                    "JPEG",
+                    "SVG"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the process of making an image appear three-dimensional?",
+                answers: [
+                    "Filtering",
+                    "Rendering",
+                    "Masking",
+                    "Compositing"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which design concept involves using minimal elements to achieve maximum effect?",
+                answers: [
+                    "Brutalism",
+                    "Minimalism",
+                    "Maximalism",
+                    "Skeuomorphism"
+                ],
+                correct: 1
+            },
+            {
+                question: "What does negative space refer to in design?",
+                answers: [
+                    "Dark-colored areas",
+                    "Unused or empty space",
+                    "Destructive elements",
+                    "Bottom half of a composition"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of these is a pixel-based image editing technique?",
+                answers: [
+                    "Vectorizing",
+                    "Rasterizing",
+                    "Extruding",
+                    "Bezier curves"
+                ],
+                correct: 1
+            },
+            {
+                question: "What is the standard video frame rate for most web content?",
+                answers: [
+                    "24 fps",
+                    "30 fps",
+                    "60 fps",
+                    "120 fps"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which design style embraces asymmetry, irregularity, and simplicity?",
+                answers: [
+                    "Art Deco",
+                    "Baroque",
+                    "Wabi-Sabi",
+                    "Victorian"
+                ],
+                correct: 2
+            },
+            {
+                question: "What does the acronym HTML stand for?",
+                answers: [
+                    "Hyper Text Module Language",
+                    "Hyper Text Markup Language",
+                    "High Technical Media Language",
+                    "Hyper Technical Markup Links"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which color is formed by mixing yellow and blue?",
+                answers: [
+                    "Orange",
+                    "Purple",
+                    "Green",
+                    "Brown"
+                ],
+                correct: 2
+            }
+        ];
+        
+        // Quiz state
+        let currentQuestion = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+        
+        // DOM elements
+        const quizContent = document.getElementById('quiz-content');
+        const questionCount = document.querySelector('.question-count');
+        const questionElement = document.getElementById('question');
+        const answersElement = document.getElementById('answers');
+        const resultsElement = document.getElementById('results');
+        const scoreElement = document.getElementById('score');
+        const scoreMessage = document.getElementById('score-message');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Initialize quiz
+        function initQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answeredQuestions = 0;
+            showQuestion();
+            quizContent.style.display = 'block';
+            resultsElement.style.display = 'none';
+        }
+        
+        // Display current question
+        function showQuestion() {
+            const question = quizQuestions[currentQuestion];
+            questionCount.textContent = `${currentQuestion + 1}/50`;
+            questionElement.textContent = question.question;
+            
+            // Clear previous answers
+            answersElement.innerHTML = '';
+            
+            // Add answer choices
+            question.answers.forEach((answer, index) => {
+                const answerElement = document.createElement('div');
+                answerElement.classList.add('answer');
+                answerElement.textContent = answer;
+                
+                // Create feedback span
+                const feedback = document.createElement('span');
+                feedback.classList.add('feedback');
+                answerElement.appendChild(feedback);
+                
+                answerElement.addEventListener('click', () => selectAnswer(index));
+                answersElement.appendChild(answerElement);
+            });
+        }
+        
+        // Handle answer selection
+        function selectAnswer(selectedIndex) {
+            // Prevent multiple selections for the same question
+            if (answeredQuestions > currentQuestion) return;
+            
+            const question = quizQuestions[currentQuestion];
+            const answerElements = document.querySelectorAll('.answer');
+            const selectedElement = answerElements[selectedIndex];
+            const correctElement = answerElements[question.correct];
+            
+            // Check if answer is correct
+            const isCorrect = selectedIndex === question.correct;
+            
+            // Update score
+            if (isCorrect) {
+                score++;
+            }
+            
+            // Add appropriate classes and show feedback
+            if (isCorrect) {
+                selectedElement.classList.add('correct');
+                selectedElement.querySelector('.feedback').textContent = 'Correct!';
+                selectedElement.querySelector('.feedback').classList.add('correct');
+            } else {
+                selectedElement.classList.add('incorrect');
+                selectedElement.querySelector('.feedback').textContent = 'Incorrect!';
+                selectedElement.querySelector('.feedback').classList.add('incorrect');
+                
+                // Highlight correct answer
+                correctElement.classList.add('correct');
+                correctElement.querySelector('.feedback').textContent = 'Correct!';
+                correctElement.querySelector('.feedback').classList.add('correct');
+            }
+            
+            answeredQuestions++;
+            
+            // Move to next question after a delay
+            setTimeout(() => {
+                currentQuestion++;
+                
+                if (currentQuestion < quizQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
+        
+        // Show final results
+        function showResults() {
+            quizContent.style.display = 'none';
+            resultsElement.style.display = 'block';
+            
+            scoreElement.textContent = `${score}/50`;
+            
+            // Determine score class and message
+            const scorePercentage = (score / quizQuestions.length) * 100;
+            
+            if (scorePercentage >= 80) {
+                scoreElement.className = 'score high-score';
+                scoreMessage.textContent = 'Excellent! You have a strong understanding of graphic design and digital media concepts.';
+            } else if (scorePercentage >= 50) {
+                scoreElement.className = 'score medium-score';
+                scoreMessage.textContent = 'Good job! You have a decent grasp of the fundamentals, but there\'s room for improvement.';
+            } else {
+                scoreElement.className = 'score low-score';
+                scoreMessage.textContent = 'You might need more practice with graphic design and digital media concepts.';
+            }
+        }
+        
+        // Restart quiz
+        restartBtn.addEventListener('click', initQuiz);
+        
+        // Start the quiz when page loads
+        initQuiz();
+    </script>
+</body>
+</html>
